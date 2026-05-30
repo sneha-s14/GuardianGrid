@@ -1,5 +1,5 @@
-import 'package:flu er/material.dart'; 
-import 'package:supabase_flu er/supabase_flu er.dart'; 
+import 'package:flutter/material.dart'; 
+import 'package:supabase_flutter/supabase_flutter.dart'; 
 import '../../map/screens/map_screen.dart'; 
 import 'register_screen.dart'; 
  
@@ -11,8 +11,8 @@ class LoginScreen extends StatefulWidget {
  
 class _LoginScreenState extends State<LoginScreen> { 
   // Controllers hold the text typed into fields 
-  final _emailCtrl = TextEdi ngController(); 
-  final _passCtrl = TextEdi ngController(); 
+  final _emailCtrl = TextEditingController(); 
+  final _passCtrl = TextEditingController(); 
   bool _loading = false; 
  
   Future<void> _signIn() async { 
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // Logo 
               Container( 
                 width: 80, height: 80, 
-                decora on: BoxDecora on( 
+                decoration: BoxDecoration( 
                   color: const Color(0xFF6C63FF).withOpacity(0.2), 
                   shape: BoxShape.circle, 
                 ), 
@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _emailCtrl, 
                 keyboardType: TextInputType.emailAddress, 
                 style: const TextStyle(color: Colors.white), 
-                decora on: const InputDecora on( 
+                decoration: const InputDecoration( 
                   labelText: 'Email', 
                   prefixIcon: Icon(Icons.email_outlined), 
                 ), 
@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _passCtrl, 
                 obscureText: true, 
                 style: const TextStyle(color: Colors.white), 
-                decora on: const InputDecora on( 
+                decoration: const InputDecoration( 
                   labelText: 'Password', 
                   prefixIcon: Icon(Icons.lock_outline), 
                 ), 
@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24), 
               SizedBox( 
                 width: double.infinity, 
-                child: ElevatedBu on( 
+                child: ElevatedButton( 
                   onPressed: _loading ? null : _signIn, 
                   child: _loading 
                       ? const SizedBox(height: 20, width: 20, 
@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ), 
               ), 
               const SizedBox(height: 16), 
-              TextBu on( 
+              TextButton( 
                 onPressed: () => Navigator.push(context, 
                     MaterialPageRoute(builder: (_) => const RegisterScreen())), 
                 child: const Text("Don't have an account? Register", 

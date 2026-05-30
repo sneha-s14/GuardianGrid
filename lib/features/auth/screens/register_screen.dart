@@ -34,7 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               MaterialPageRoute(builder: (_) => const MapScreen())); 
         } 
       } 
-    } on AuthExcep on catch (e) { 
+    } on AuthException catch (e) { 
       if (mounted) { 
         ScaffoldMessenger.of(context).showSnackBar( 
           SnackBar(content: Text(e.message), backgroundColor: Colors.red), 
@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextField( 
               controller: _nameCtrl, 
               style: const TextStyle(color: Colors.white), 
-              decora on: const InputDecora on( 
+              decoration: const InputDecoration( 
                 labelText: 'Full Name', 
                 prefixIcon: Icon(Icons.person_outline), 
               ), 
@@ -65,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextField( 
               controller: _emailCtrl, 
               style: const TextStyle(color: Colors.white), 
-              decora on: const InputDecora on( 
+              decoration: const InputDecoration( 
                 labelText: 'Email', 
                 prefixIcon: Icon(Icons.email_outlined), 
               ), 
@@ -75,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               controller: _passCtrl, 
               obscureText: true, 
               style: const TextStyle(color: Colors.white), 
-              decora on: const InputDecora on( 
+              decoration: const InputDecoration( 
                 labelText: 'Password (min 6 characters)', 
                 prefixIcon: Icon(Icons.lock_outline), 
               ), 
@@ -83,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 24), 
             SizedBox( 
               width: double.infinity, 
-              child: ElevatedBu on( 
+              child: ElevatedButton( 
                 onPressed: _loading ? null : _register, 
                 child: _loading 
                     ? const CircularProgressIndicator(color: Colors.white) 
