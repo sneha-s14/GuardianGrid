@@ -142,7 +142,7 @@ class _MapScreenState extends State<MapScreen> {
                   heatMapOptions: HeatMapOptions(
                     radius: 60,
                     layerOpacity: 0.7,
-                    gradient: const {
+                    gradient: {
                       0.2: Colors.green,
                       0.5: Colors.yellow,
                       0.7: Colors.orange,

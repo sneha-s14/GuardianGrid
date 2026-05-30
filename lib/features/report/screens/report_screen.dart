@@ -1,58 +1,59 @@
-import 'package:flu er/material.dart'; 
-import 'package:supabase_flu er/supabase_flu er.dart'; 
-import '../../../services/loca on_service.dart'; 
- 
-class ReportScreen extends StatefulWidget { 
-  const ReportScreen({super.key}); 
-  @override 
-  State<ReportScreen> createState() => _ReportScreenState(); 
-} 
- 
-class _ReportScreenState extends State<ReportScreen> { 
-  String _selectedType = 'harassment'; 
-  final _descCtrl = TextEdi ngController(); 
-  bool _anonymous = true; 
-  bool _submi ng = false; 
- 
-  // All incident types users can choose from 
-  final _types = { 
-    'harassment': ' Harassment', 
-    'the ': ' The /Robbery', 
-    'poor_ligh ng': ' Poor Ligh ng', 
-    'unsafe_crowd': ' Unsafe Crowd', 
-    'suspicious_ac vity': ' Suspicious Ac vity', 
-    'other': ' Other', 
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../services/location_service.dart';
+
+class ReportScreen extends StatefulWidget {
+  const ReportScreen({super.key});
+
+  @override
+  State<ReportScreen> createState() => _ReportScreenState();
+}
+
+class _ReportScreenState extends State<ReportScreen> {
+  String _selectedType = 'harassment';
+  final _descCtrl = TextEditingController();
+  bool _anonymous = true;
+  bool _submitting = false;
+
+  // All incident types users can choose from
+  final _types = {
+    'harassment': 'Harassment',
+    'theft': 'Theft/Robbery',
+    'poor_lighting': 'Poor Lighting',
+    'unsafe_crowd': 'Unsafe Crowd',
+    'suspicious_activity': 'Suspicious Activity',
+    'other': 'Other',
   }; 
  
-  Future<void> _submitReport() async { 
-    setState(() => _submi ng = true); 
-    try { 
-      final posi on = await Loca onService.getCurrentLoca on(); 
-      if (posi on == null) { 
-        ScaffoldMessenger.of(context).showSnackBar( 
-          const SnackBar(content: Text('Could not get loca on')), 
-        ); 
-        return; 
-      } 
- 
-      final userId = _anonymous 
-          ? null 
-          : Supabase.instance.client.auth.currentUser?.id; 
- 
-      await Supabase.instance.client.from('incidents').insert({ 
-        'user_id': userId, 
-        'la tude': posi on.la tude, 
-        'longitude': posi on.longitude, 
-        'incident_type': _selectedType, 
-        'descrip on': _descCtrl.text.isEmpty ? null : _descCtrl.text, 
-        'anonymous': _anonymous, 
+  Future<void> _submitReport() async {
+    setState(() => _submitting = true);
+    try {
+      final position = await LocationService.getCurrentLocation();
+      if (position == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not get location')),
+        );
+        return;
+      }
+
+      final userId = _anonymous
+          ? null
+          : Supabase.instance.client.auth.currentUser?.id;
+
+      await Supabase.instance.client.from('incidents').insert({
+        'user_id': userId,
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+        'incident_type': _selectedType,
+        'description': _descCtrl.text.isEmpty ? null : _descCtrl.text,
+        'anonymous': _anonymous,
       }); 
  
       if (mounted) { 
         Navigator.pop(context); 
         ScaffoldMessenger.of(context).showSnackBar( 
           const SnackBar( 
-            content: Text(' Report submi ed. Helping keep the city safer!'), 
+            content: Text('Report submitted. Helping keep the city safer!'), 
             backgroundColor: Color(0xFF2ED573), 
           ), 
         ); 
@@ -64,14 +65,14 @@ class _ReportScreenState extends State<ReportScreen> {
         ); 
       } 
     } finally { 
-      setState(() => _submi ng = false); 
+      setState(() => _submitting = false); 
     } 
   } 
  
   @override 
   Widget build(BuildContext context) { 
     return Scaffold( 
-      appBar: AppBar( tle: const Text('Report Incident')), 
+      appBar: AppBar(title: const Text('Report Incident')), 
       body: SingleChildScrollView( 
         padding: const EdgeInsets.all(16), 
         child: Column( 
@@ -89,8 +90,8 @@ class _ReportScreenState extends State<ReportScreen> {
                   onTap: () => setState(() => _selectedType = entry.key), 
                   child: Container( 
                     padding: const EdgeInsets.symmetric( 
-                        horizontal: 12, ver cal: 8), 
-                    decora on: BoxDecora on( 
+                        horizontal: 12, vertical: 8), 
+                    decoration: BoxDecoration( 
                       color: isSelected 
                           ? const Color(0xFF6C63FF) 
                           : const Color(0xFF1A1A2E), 
@@ -110,43 +111,43 @@ class _ReportScreenState extends State<ReportScreen> {
               }).toList(), 
             ), 
             const SizedBox(height: 24), 
-            const Text('Addi onal Details (op onal)', 
+            const Text('Additional Details (optional)', 
                 style: TextStyle(fontWeight: FontWeight.w500)), 
             const SizedBox(height: 8), 
             TextField( 
               controller: _descCtrl, 
               maxLines: 3, 
               style: const TextStyle(color: Colors.white), 
-              decora on: const InputDecora on( 
+              decoration: const InputDecoration( 
                 hintText: 'Describe what happened...', 
               ), 
             ), 
             const SizedBox(height: 16), 
             Container( 
-              decora on: BoxDecora on( 
+              decoration: BoxDecoration( 
                 color: const Color(0xFF1A1A2E), 
                 borderRadius: BorderRadius.circular(12), 
               ), 
               child: SwitchListTile( 
-                tle: const Text('Submit Anonymously'), 
-                sub tle: const Text('Your iden ty will not be shared', 
+                title: const Text('Submit Anonymously'), 
+                subtitle: const Text('Your identity will not be shared', 
                     style: TextStyle(fontSize: 12, color: Colors.grey)), 
                 value: _anonymous, 
-                ac veColor: const Color(0xFF6C63FF), 
+                activeColor: const Color(0xFF6C63FF), 
                 onChanged: (v) => setState(() => _anonymous = v), 
               ), 
             ), 
             const SizedBox(height: 24), 
             SizedBox( 
               width: double.infinity, 
-              child: ElevatedBu on.icon( 
-                onPressed: _submi ng ? null : _submitReport, 
-                icon: _submi ng 
+              child: ElevatedButton.icon( 
+                onPressed: _submitting ? null : _submitReport, 
+                icon: _submitting 
                     ? const SizedBox(width: 20, height: 20, 
                         child: CircularProgressIndicator( 
                             color: Colors.white, strokeWidth: 2)) 
                     : const Icon(Icons.send), 
-                label: Text(_submi ng ? 'Submi ng...' : 'Submit Report'), 
+                label: Text(_submitting ? 'Submitting...' : 'Submit Report'), 
               ), 
             ), 
           ], 

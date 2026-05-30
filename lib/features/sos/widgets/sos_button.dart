@@ -1,31 +1,32 @@
-import 'package:flu er/material.dart'; 
-import 'package:flu er/services.dart'; 
-import 'package:supabase_flu er/supabase_flu er.dart'; 
-import '../../../services/loca on_service.dart'; 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../services/location_service.dart';
  
-class SOSBu on extends StatefulWidget { 
-  const SOSBu on({super.key}); 
-  @override 
-  State<SOSBu on> createState() => _SOSBu onState(); 
-} 
+class SOSButton extends StatefulWidget {
+  const SOSButton({super.key});
+
+  @override
+  State<SOSButton> createState() => _SOSButtonState();
+}
  
-class _SOSBu onState extends State<SOSBu on> 
-    with SingleTickerProviderStateMixin { 
+class _SOSButtonState extends State<SOSButton>
+    with SingleTickerProviderStateMixin {
   bool sending = false; 
-  // Anima on for pulsing effect 
-  late Anima onController _animCtrl; 
-  late Anima on<double> _scaleAnim; 
+  // Animation for pulsing effect
+  late AnimationController _animCtrl;
+  late Animation<double> _scaleAnim;
  
   @override 
   void initState() { 
     super.initState(); 
-    _animCtrl = Anima onController( 
-      vsync: this, 
-      dura on: const Dura on(seconds: 1), 
-    ).repeat(reverse: true); 
-    _scaleAnim = Tween<double>(begin: 1.0, end: 1.08).animate( 
-      CurvedAnima on(parent: _animCtrl, curve: Curves.easeInOut), 
-    ); 
+    _animCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true);
+    _scaleAnim = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _animCtrl, curve: Curves.easeInOut),
+    );
   } 
  
   @override 
@@ -36,14 +37,14 @@ class _SOSBu onState extends State<SOSBu on>
  
   Future<void> triggerSOS() async { 
     // Vibrate the phone to confirm SOS 
-    Hap cFeedback.heavyImpact(); 
+    HapticFeedback.heavyImpact(); 
     setState(() => sending = true); 
  
     try { 
-      final posi on = await Loca onService.getCurrentLoca on(); 
-      if (posi on == null) { 
+      final position = await LocationService.getCurrentLocation(); 
+      if (position == null) { 
         ScaffoldMessenger.of(context).showSnackBar( 
-          const SnackBar(content: Text('Cannot get loca on for SOS')), 
+          const SnackBar(content: Text('Cannot get location for SOS')), 
         ); 
         return; 
       } 
@@ -53,15 +54,14 @@ class _SOSBu onState extends State<SOSBu on>
       // Save SOS event to Supabase 
       await Supabase.instance.client.from('sos_events').insert({ 
         'user_id': userId, 
-        'la tude': posi on.la tude, 
-        'longitude': posi on.longitude, 
-        'status': 'ac ve', 
+        'latitude': position.latitude, 
+        'longitude': position.longitude, 
+        'status': 'active', 
       }); 
- 
       // Also send a panic crowd signal for heatmap 
       await Supabase.instance.client.from('crowd_signals').insert({ 
-        'la tude': posi on.la tude, 
-        'longitude': posi on.longitude, 
+        'latitude': position.latitude, 
+        'longitude': position.longitude, 
         'signal_type': 'panic', 
         'intensity': 1.0, 
       }); 
@@ -71,15 +71,15 @@ class _SOSBu onState extends State<SOSBu on>
           context: context, 
           builder: (_) => AlertDialog( 
             backgroundColor: const Color(0xFF1A1A2E), 
-            tle: const Text(' SOS Ac vated', 
+            title: const Text('SOS Activated', 
                 style: TextStyle(color: Colors.red)), 
             content: const Text( 
               'Your loca on has been shared with trusted contacts ' 
               'and safety services. Help is on the way.', 
               style: TextStyle(color: Colors.white), 
             ), 
-            ac ons: [ 
-              TextBu on( 
+            actions: [ 
+              TextButton( 
                 onPressed: () => Navigator.pop(context), 
                 child: const Text('OK'), 
               ), 
@@ -106,13 +106,13 @@ class _SOSBu onState extends State<SOSBu on>
         const Text('Hold for SOS', 
             style: TextStyle(color: Colors.grey, fontSize: 12)), 
         const SizedBox(height: 8), 
-        ScaleTransi on( 
+        ScaleTransition( 
           scale: _scaleAnim, 
           child: GestureDetector( 
             onLongPress: triggerSOS, 
             child: Container( 
               width: 80, height: 80, 
-              decora on: BoxDecora on( 
+              decoration: BoxDecoration( 
                 shape: BoxShape.circle, 
                 color: sending ? Colors.orange : const Color(0xFFFF4757), 
                 boxShadow: [ 

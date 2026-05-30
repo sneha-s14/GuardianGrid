@@ -1,6 +1,6 @@
-import 'package:flu er/material.dart'; 
-import 'package:supabase_flu er/supabase_flu er.dart'; 
-import '../../map/screens/map_screen.dart'; 
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../map/screens/mapscreen.dart';
  
 class RegisterScreen extends StatefulWidget { 
   const RegisterScreen({super.key}); 
@@ -9,9 +9,9 @@ class RegisterScreen extends StatefulWidget {
 } 
  
 class _RegisterScreenState extends State<RegisterScreen> { 
-  final _nameCtrl = TextEdi ngController(); 
-  final _emailCtrl = TextEdi ngController(); 
-  final _passCtrl = TextEdi ngController(); 
+  final _nameCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
   bool _loading = false; 
  
   Future<void> _register() async { 
@@ -48,7 +48,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override 
   Widget build(BuildContext context) { 
     return Scaffold( 
-      appBar: AppBar( tle: const Text('Create Account')), 
+      appBar: AppBar(title: const Text('Create Account')), 
       body: Padding( 
         padding: const EdgeInsets.all(24), 
         child: Column( 

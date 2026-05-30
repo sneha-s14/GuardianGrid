@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/theme.dart';
 import 'features/auth/screens/login_screen.dart';
-import 'features/map/screens/map_screen.dart';
+import 'features/map/screens/mapscreen.dart';
 
 class GuardianGridApp extends StatelessWidget {
   const GuardianGridApp({super.key});

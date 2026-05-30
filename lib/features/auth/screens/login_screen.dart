@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart'; 
-import 'package:supabase_flutter/supabase_flutter.dart'; 
-import '../../map/screens/map_screen.dart'; 
-import 'register_screen.dart'; 
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../map/screens/mapscreen.dart';
+import 'register_screen.dart';
  
 class LoginScreen extends StatefulWidget { 
   const LoginScreen({super.key}); 
@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(builder: (_) => const MapScreen()), 
         ); 
       } 
-    } on AuthExcep on catch (e) { 
+    } on AuthException catch (e) { 
       // Show error message 
       if (mounted) { 
         ScaffoldMessenger.of(context).showSnackBar( 
